@@ -1,0 +1,326 @@
+Every reference type in Java is a descendant of the object class, and thus they share some universal methods
+
+1. static type vs dynamic type
+
+A variable’s static type is specified at declaration, whereas its dynamic type is specified at instantiation
+General rule of thumb: is RHS guaranteed to be a LHS?
+Though interfaces cannot be instantiated, they can be static types (ie. Cute c = new Corgi();
+
+Animal a = new Dog();
+Dog d = a;    // Compiler error: an animal is not a dog
+Dog d = (Dog) a;    // Valid cast: an animal could reasonably be a dog
+d = new Dog();
+a = (Animal) d   // Valid cast: a dog definitely is-a animal
+Cat c = new Cat();
+d = (Dog) c;     // Compiler error: a cat is definitely not a dog
+a = c;
+d = (Dog) a;   // Cast compiles because an animal could reasonably be a dog. During runtime, errors
+
+2. static vs non static
+
+A static method is a class method and belongs to the class itself.
+This means you do not need an instance in order to use a static method.
+A non-static method is an instance method and belongs to each object that is generated from the class.
+
+Static variables are shared among all instances of a class. We should access static variables using class name.
+Non static variables are specific to that instance of a class. We should access instance variables using instance name.
+
+Instance method:
+reference instance variable? yes
+reference static variable? yes
+call from class name? no
+call from instance? yes
+
+Static method:
+reference instance variable? no
+reference static variable? yes
+call from class name? yes
+call from instance? yes
+
+static (nested) class:
+It cannot access non-static members (fields and methods) of the enclosing class without an explicit object reference.
+As it's static, it belongs to the enclosing class rather than any instance of the enclosing class.
+It's often used when the nested class doesn't need to access instance-specific data or methods of its enclosing class.
+
+nonstatic (nested) class:
+It can directly access both static and non-static members of the enclosing class.
+Each instance of an inner class is associated with an instance of its enclosing class,
+which means you need an instance of the outer class to create an instance of the inner class.
+
+3. Class object and instance
+
+Class is just a special data type that we can create
+object refers to the concrete examples of that class
+an instance is a specific object of that class
+
+4. class vs public class
+
+In Java, the `public` keyword in front of a class or interface declaration determines its accessibility from other classes and packages. The difference between using `public` with a class/interface and not using it can be summarized as follows:
+
+1. **Accessibility**:
+    - **`public class/interface`**: The class or interface can be accessed from any other class or interface in any package, provided the necessary `import` statements are used.
+    - **`class/interface` without `public`**: The class or interface has package-private (also known as default) access. This means it can only be accessed from other classes or interfaces within the same package.
+
+2. **File Naming**:
+    - **`public class/interface`**: If a class or interface is declared as `public`, then the name of the Java file must exactly match the name of that public class or interface. For instance, if you have `public class Dog`, then the filename must be `Dog.java`.
+    - **`class/interface` without `public`**: There is no strict naming requirement for the file. However, it's still a common practice to name the file after the primary class or interface it contains.
+
+3. **Number of Public Types**:
+    - **`public class/interface`**: You can have only one `public` class or interface in a single Java file.
+    - **`class/interface` without `public`**: You can have multiple non-public classes or interfaces in a single Java file.
+
+4. **Use Cases**:
+    - **`public class/interface`**: When you want to expose a class or interface as part of the API or functionality of a library, or when you want to use it across different packages.
+    - **`class/interface` without `public`**: When the class or interface is intended for internal use within the package and shouldn't be exposed outside. This is useful for encapsulation, ensuring that only the necessary parts of a library or program are exposed to the outside world.
+
+Example:
+
+Let's consider you have a package named `animals`.
+
+```java
+// In Dog.java
+public class Dog {
+    // ... class content ...
+}
+
+// In Cat.java within the same package
+class Cat {
+    // ... class content ...
+}
+
+// In Main.java within a different package
+import animals.Dog;
+
+public class Main {
+    public static void main(String[] args) {
+        Dog myDog = new Dog();   // This works because Dog is public
+        // Cat myCat = new Cat();   This would cause an error because Cat is package-private
+    }
+}
+```
+
+In this example, the `Dog` class is accessible from `Main` because it's `public`, while the `Cat` class is not accessible from outside its package due to its package-private access.
+
+5. compilation error vs run time error
+
+Compilation Errors:
+- Occur during code compilation.
+- Usually syntax or type related.
+
+Examples:
+- Missing semicolon or unmatched parentheses:
+  public static void main(String[] args) {
+      System.out.println("Hello, World"
+  }
+
+- Incorrect type assignment:
+  int number = "1234";
+
+Runtime Errors:
+- Occur during program execution.
+- Typically logical or environmental.
+
+Examples:
+- Accessing an uninitialized object:
+  String text = null;
+  int length = text.length();
+
+- Array index out-of-bounds:
+  int[] numbers = {1, 2, 3};
+  int value = numbers[5];
+
+- Division by zero:
+  int result = 10 / 0;
+
+6. fundamental concepts in oop
+
+1. Encapsulation:
+   - What: Bundles data and methods into a single unit or class.
+   - Why: Protects data, promoting data integrity and security.
+
+2. Inheritance:
+   - What: A new class inherits properties and behaviors from an existing class.
+   - Why: Promotes code reuse and supports hierarchical classifications.
+
+3. Polymorphism:
+   - What: Different classes can be treated as instances of the same class via inheritance.
+   - Why: Provides flexibility, allowing objects of different classes to be treated similarly.
+
+4. Abstraction:
+   - What: Hides complex details and shows only the essential object features.
+   - Why: Simplifies systems, making them easier to handle and maintain.
+
+7. asymptotic
+
+Simplifications:
+Only consider the worst case.
+Ignore lower order terms.
+Ignore any coefficients.
+All operations take the same time.
+
+8. ADT
+
+An Abstract Data Type (ADT) is a theoretical concept that defines a set of data and the operations
+that can be performed on that data, without specifying the underlying implementation.
+It provides a high-level, language-independent description, allowing for multiple concrete representations and emphasizing
+encapsulation, abstraction, and data organization. (similar to interface in Java）
+
+9. interface vs class
+
+Interfaces tell us what we want to do but not how; classes tell us how we want to do it
+Interfaces can have empty method bodies (that must be filled in by subclasses) or default methods (do not need to be overridden by subclasses)
+With extends, subclasses inherit their parent’s instance and static variables, methods (can be overridden), nested classes
+But not constructors!
+
+A class can extend one another class.
+A class can implement one or more interfaces.
+An interface can extend one or more other interfaces.
+An interface cannot extend or implement a class.
+
+10. Java data structures
+
+Java Fundamental Data Structures:
+
+1. Lists:
+- ArrayList: Resizable-array implementation of the List interface.
+- LinkedList: Doubly-linked list implementation of the List and Deque interfaces.
+
+2. Sets:
+- HashSet: Uses a hash table to store elements; does not maintain order.
+- LinkedHashSet: Hash table and linked list implementation; maintains insertion order.
+- TreeSet: Red-Black tree implementation; elements are ordered.
+
+3. Maps:
+- HashMap: Hash table based implementation of the Map interface.
+- LinkedHashMap: Hash table and linked list; maintains insertion order.
+- TreeMap: Red-Black tree based NavigableMap implementation.
+
+4. Queues(FIFO, elements typically added at rear and removed from front) and Deques(double ended queue, supports insertion and removal from both front and end):
+- ArrayDeque: Resizable-array implementation of the Deque interface.
+- PriorityQueue: Priority queue based on a priority heap.
+
+5. Stack:
+- Stack: A legacy class, ArrayDeque is recommended for new code as a stack.
+
+6. Arrays:
+- Native arrays, like int[], Object[], etc.
+
+11. Java types
+
+In Java, there are two kinds of types: primitive types and reference types.
+
+Primitive types in Java:
+boolean , byte , char , short , int , long , float and double .
+
+Pretty much every other type is a reference type, such as String.
+If a type starts with a capital letter, it is likely a reference type.
+
+Each primitive has a corresponding reference type
+
+Any reference type can be assigned a value of null
+
+12. overloading vs overriding
+
+Method Overloading is done when there are multiple methods with the same name, but different parameters.
+Method Overriding is done when a subclass has a method with the exact same function signature as a method in its superclass. It is usuallymarked with the @Override tag.
+
+13. Library package and module
+
+A library is fundamentally a collection of packages.
+Its objective is to offer a collection of ready-to-use features so that users won't need to be concerned about additional packages.
+A package in Java is used to group related classes.
+Java API is a built-in library
+In Java, every class is part of some package. If you don't define a package for a class, it belongs to the default package (an unnamed package).
+We can either import a single class (along with its methods and attributes), or a whole package that contain all the classes that belong to the specified package.
+import package.name.Class;   // Import a single class
+import package.name.*;   // Import the whole package
+
+Module: A set of methods that work together as a whole to perform some task or set of related tasks.
+
+A module is said to be encapsulated if its implementation is completely hidden, and it can be accessed only through a documented interface.
+
+14. private class
+
+In Java, there isn't a "private class" at the top level.
+That is, you cannot have a class at the top level (i.e., not nested within another class) that is declared as private.
+All top-level classes in Java can only have public or default (package-private) access.
+
+However, when we talk about "private classes," we're typically referring to nested or inner classes.
+These are classes defined within another class. A nested class can be marked as private, meaning it can only be accessed from within the enclosing class.
+
+15. private vs public
+
+Public variables, are variables that are visible to all classes.
+Private variables, are variables that are visible only to the class to which they belong.
+Public functions can be accessed anywhere(both within the class and outside the class).
+Private functions can only be accessed within the class.
+
+16. time complexity analysis
+
+1 + 2 + 3 + … + N = Θ(N^2)
+1^k+2^k+3^k+ … + N^k		(k >=0)		= Θ(N^(k+1))
+1 + 2 + 4 + 8 + … + N 	= Θ(N)
+k^0+k^1+k^2+ … + k^Q		(k > 1)		= Θ(k^Q)
+
+Amortized runtime is an average runtime per operation over a worst-case sequence of operations.
+This means, when analyzing the runtime for a sequence of operations, we might be able to guarantee a certain average performance even if individual operations might occasionally be much slower.
+
+use series to analyze complicated time complexity analysis
+
+int j = 1;
+for (int i = 0; i < N; i++) {
+    for (; j < N; j++) {
+        System.out.println(i + ", " + j);
+    }
+} time complexity: O(N)
+
+
+for (int i = 0; i < N; i *= 2) {
+    for (int j = 0; j < i; j++) {
+        System.out.println(i + ", " + j);
+    }
+} time complexity: O(N)
+
+
+for (int i = 1; i < arr.length; i *= 2) {
+    System.out.println(arr[i]);
+} time complexity: O(log N)
+
+
+for (int i = 1; i <= n; i++) {
+    for (int j = 1; j <= i; j++) {
+        System.out.println(i + ", " + j);
+    }
+} time complexity: O(N^2)
+
+
+for (int i = 0; i < arr.length; i++) {
+    for (int j = 0; j < arr.length; j += i) {
+        sum += arr[j];
+    }
+} time complexity: O(N*logN)
+
+
+public static int f3(int n) {
+   if (n <= 1){
+    return 1;
+    }
+   return f3(n-1) + f3(n-1);
+} time complexity: O(2^N) tip: count the number of calls in recursive function(each call is taking constant time)
+
+17. Hash
+
+Never store objects that can change in a HashSet or HashMap. Example: You’d never want to make a HashSet<List<Integer>>
+If an object’s variables changes, then its hashCode changes. May result in items getting lost.
+Never override equals without also overriding hashCode. Can also lead to items getting lost and generally weird behavior
+HashMaps and HashSets use equals to determine if an item exists in a particular bucket.
+
+18. Hash Table(data structure)
+
+Data is converted into a hash code, the hash code is then reduced to a valid index.
+Data is then stored in a bucket corresponding to that index.
+Each bucket is a “separate chain” of items.
+Resize when load factor N/M exceeds some constant.
+If items are spread out nicely, you get Θ(1) average runtime.
+
+
